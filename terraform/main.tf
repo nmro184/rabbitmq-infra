@@ -1,7 +1,7 @@
 resource "aws_instance" "rabbitmq_node" {
   ami                         = var.ami_id
   instance_type               = "t2.micro"
-  key_name                    = var.key_name
+  key_name                    = var.ssh_key_name
   subnet_id                   = var.subnet_ids[1]
   vpc_security_group_ids      = [aws_security_group.rabbitmq_sg.id]
 

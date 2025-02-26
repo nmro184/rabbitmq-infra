@@ -2,7 +2,7 @@ resource "aws_launch_template" "rabbitmq" {
   name_prefix   = "rabbitmq-cluster"
   image_id      = var.ami_id
   instance_type = "t2.micro"
-  key_name      = var.key_name
+  key_name      = var.ssh_key_name
 
   vpc_security_group_ids = [aws_security_group.rabbitmq_sg.id]
 
@@ -150,6 +150,9 @@ sudo rabbitmqctl start_app
 check_success "Failed to start RabbitMQ app after joining cluster."
 
 echo "✅ Successfully joined RabbitMQ cluster at rabbit@$RABBITMQ_CLUSTER_NODE"
+
+sudo rabbitmq-plugins enable rabbitmq_management
+sudo systemctl restart rabbitmq-server
 
 echo "===== RabbitMQ Cluster Node Setup Completed Successfully ====="
 
