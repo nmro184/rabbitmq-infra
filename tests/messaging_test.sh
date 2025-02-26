@@ -33,7 +33,7 @@ TARGET_NODE=${RABBITMQ_IPS[0]}
 echo "📡 Target RabbitMQ Node: $TARGET_NODE"
 echo "=============================="
 
-# 🔍 Step 1: Set Up SSH Tunnel (if not already running)
+#Set Up SSH Tunnel 
 if ! nc -z localhost 15672; then
     echo "🔒 Setting up SSH tunnel to RabbitMQ on $TARGET_NODE..."
     ssh -i "$SSH_KEY_PATH" -L 15672:localhost:15672 -N -f "$EC2_USER@$TARGET_NODE"
@@ -43,7 +43,7 @@ echo "✅ SSH tunnel established!"
 
 echo "=============================="
 
-# 🔍 Step 2: Verify Connection to RabbitMQ API
+# Verify Connection to RabbitMQ API
 echo "🔍 Checking if RabbitMQ is accessible via SSH tunnel..."
 API_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -u "$RABBITMQ_USER:$RABBITMQ_PASS" "http://localhost:15672/api/overview")
 
@@ -55,7 +55,22 @@ echo "✅ RabbitMQ API is accessible!"
 
 echo "=============================="
 
-# 🔄 Step 3: Publish a Test Message
+#Check if the Queue Exists
+echo "🔍 Checking if queue '$QUEUE_NAME' exists..."
+QUEUE_EXISTS=$(curl -s -u "$RABBITMQ_USER:$RABBITMQ_PASS" "http://localhost:15672/api/queues" | grep -q "\"name\":\"$QUEUE_NAME\"" && echo "yes" || echo "no")
+
+if [[ "$QUEUE_EXISTS" == "no" ]]; then
+    echo "⚠️ Queue '$QUEUE_NAME' does not exist. Creating it..."
+    curl -s -u "$RABBITMQ_USER:$RABBITMQ_PASS" -X PUT "http://localhost:15672/api/queues/%2F/$QUEUE_NAME" \
+        -H "content-type: application/json" -d '{}'
+    echo "✅ Queue '$QUEUE_NAME' created!"
+else
+    echo "✅ Queue '$QUEUE_NAME' already exists."
+fi
+
+echo "=============================="
+
+# 🔄 Step 4: Publish a Test Message
 echo "📤 Sending message to RabbitMQ..."
 PUBLISH_RESPONSE=$(curl -s -u "$RABBITMQ_USER:$RABBITMQ_PASS" \
     -X POST "http://localhost:15672/api/exchanges/%2F/amq.default/publish" \
@@ -80,7 +95,7 @@ fi
 
 echo "=============================="
 
-# 🔄 Step 4: Consume the Test Message
+# 🔄 Step 5: Consume the Test Message
 echo "📥 Checking if message was received..."
 CONSUME_RESPONSE=$(curl -s -u "$RABBITMQ_USER:$RABBITMQ_PASS" \
     -X POST "http://localhost:15672/api/queues/%2F/$QUEUE_NAME/get" \

@@ -190,3 +190,7 @@ echo "${RABBITMQ_IPS[*]}" > tests/rabbitmq_ips.txt
 
 echo "✅ Deployment completed successfully!"
 echo "⏳ Please wait a few minutes before running the tests, as it may take some time for all RabbitMQ nodes to fully initialize."
+echo "✅ You can monitor the cluster status in your AWS Console."
+echo "🚀 Once the nodes are ready, run: bash tests/run_all_tests.sh"
+
+chmod +x tests/health_check.sh tests/messaging_test.sh
