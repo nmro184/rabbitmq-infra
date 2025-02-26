@@ -19,8 +19,8 @@ Before running this project, make sure you have the following installed and conf
 ## ⚙️ Installation & Setup
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
-   cd <repository-folder>
+   git clone https://github.com/nmro184/rabbitmq-infra
+   cd rabbitmq-infra
    ```
 
 2. **Set execute permissions** for the setup script:
