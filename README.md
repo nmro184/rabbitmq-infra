@@ -15,6 +15,9 @@ Before running this project, make sure you have the following installed and conf
 - [Terraform](https://developer.hashicorp.com/terraform/downloads) – Infrastructure as Code tool.
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) – Required for authentication with AWS.
 - An AWS account with appropriate permissions to create EC2 instances and security groups.
+- **AWS CLI must be configured for the root user** since the setup script runs with `sudo`. Run the following command to configure AWS credentials for root:
+  ```bash
+  sudo aws configure
 
 ## ⚙️ Installation & Setup
 1. **Clone the repository**:
@@ -28,7 +31,7 @@ Before running this project, make sure you have the following installed and conf
    sudo chmod +x setup.sh
    ```
 
-3. **Run the setup script** to configure everything:
+3. **Run the setup script** to deploy everything:
    ```bash
    sudo ./setup.sh
    ```
