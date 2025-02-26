@@ -142,7 +142,7 @@ aws_region = "$AWS_REGION"
 vpc_id = "$DEFAULT_VPC_ID"
 subnet_ids = ["$(echo $DEFAULT_SUBNET_IDS | sed 's/ /", "/g')"]
 ssh_key_name = "$KEY_NAME"
-ssh_key_path = "$KEY_PATH"
+ssh_key_path = "$KEY_FILE"
 EOF
 
 echo "✅ Updated terraform.tfvars"
@@ -188,18 +188,5 @@ echo "✅ RabbitMQ Cluster Nodes: ${RABBITMQ_IPS[*]}"
 # Save IPs for testing
 echo "${RABBITMQ_IPS[*]}" > tests/rabbitmq_ips.txt
 
-echo "=============================="
-echo "🚀 Running RabbitMQ Tests..."
-echo "=============================="
-
-# Run tests using absolute path
-bash tests/run_all_tests.sh
-
-# Exit if tests fail
-if [[ $? -ne 0 ]]; then
-    echo "❌ Some tests failed! Exiting."
-    exit 1
-fi
-
-echo "✅ All tests passed successfully!"
-
+echo "✅ Deployment completed successfully!"
+echo "⏳ Please wait a few minutes before running the tests, as it may take some time for all RabbitMQ nodes to fully initialize."
